@@ -1,0 +1,177 @@
+---
+title: 'Model Context Protocol (MCP) Quickstart Guide'
+date: '2025-03-29'
+tags: ['AI', 'GOLANG', 'LLM']
+draft: false
+summary: 'Explore how the Model Context Protocol (MCP) enables AI to evolve from answering questions to executing tasks. This article delves into MCP concept, architecture, and implementation, showcasing the powerful capability of AI to directly interact with code repositories through a GitHub MCP example...'
+images: ['/static/images/blog/202503/MCP_Quickstart/mcp.webp']
+authors:
+  - default
+---
+
+Since 2022, Large Language Models (LLMs) have gradually entered the public eye and quickly become the hottest topic in the AI field.
+
+We're accustomed to typing questions into dialog boxes and waiting for models to generate seemingly intelligent responses. However, have you noticed that when you want AI to help you book flights, it only teaches you to "open a certain app to search for flights" instead of directly helping you complete the operation? This "armchair strategy" embarrassment exposes the fatal shortcoming of current LLMs—they lack the ability to interact with the real world.
+
+All of this is being changed by a protocol called MCP.
+
+## 1. What is MCP?
+
+MCP first appeared on November 25, 2024, in an article published by Anthropic: [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
+
+MCP stands for Model Context Protocol, which defines a standard for exchanging contextual information between applications and AI LLMs. It enables developers to provide various data and tools to AI in a consistent manner. You can think of it as AI's "USB-C interface."
+
+Just like USB-C interfaces can connect phones, computers, headphones, and other devices, MCP provides a standardized way for LLMs (like Claude, GPT) to safely and flexibly call external tools and data sources, evolving from "answering questions" to "executing tasks."
+
+![MCP as USB-C](/static/images/blog/202503/MCP_Quickstart/mcp.webp)
+
+## 2. Why Do We Need MCP?
+
+Before MCP, using AI often required sending all information centrally to AI and then waiting for AI to provide answers.
+
+This process might require manually querying databases or searching web pages, then copying information to AI.
+
+However, as demands become increasingly complex and requirements continue to rise, this approach cannot meet all our requirements. When writing prompts, we might want to provide more specific information to AI, such as: files, databases, real-time information, etc., so that AI can better solve problems for us.
+
+To break through this limitation, many LLM platforms introduced Function Calling, allowing AI to call external tools. `Function Calling` allows AI to call predefined functions when it needs to retrieve data or perform operations, significantly improving automation levels.
+
+However, `Function Calling` itself has limitations. Although they're all called `Function Calling`, each LLM platform implements `Function Calling` differently.
+
+For example, OpenAI's `Function Calling` and Google's are not mutually compatible, requiring developers to develop and adapt separately for different platforms, resulting in high costs.
+
+MCP was born based on this pain point. MCP standardizes the interface between AI and external tools, serving as AI models' universal plug, allowing AI to flexibly call external tools.
+
+MCP's advantages over `Function Calling`:
+
+- **Standardized Interface:** Allows developers to easily add new tools for AI.
+- **Growing Ecosystem:** MCP's ecosystem is gradually maturing, with many third-party tools and libraries already supporting it.
+- **Secure and Reliable:** We can ensure sensitive data is not uploaded.
+
+## 3. MCP Universal Architecture
+
+MCP's core follows a **client-server architecture**, where host applications can connect to multiple servers:
+
+![MCP Architecture](/static/images/blog/202503/MCP_Quickstart/MCP_architecture.webp)
+
+- **MCP Hosts**: Programs like Claude Desktop, IDEs, or AI tools that want to access data through MCP.
+- **MCP Clients**: Protocol clients maintaining 1:1 connections with servers.
+- **MCP Servers**: Lightweight programs exposing specific functionality through standardized Model Context Protocol.
+- **Local Data Source**: Computer files, databases, and services that MCP servers can safely access.
+- **Remote Services**: External internet systems that MCP servers can connect to through APIs and other methods.
+
+When you ask AI a question, the flow is:
+
+- **Question ➜ Host ➜ LLM ➜ MCP Server ➜ MCP Client ➜ Execute Operation ➜ Return Results ➜ LLM Generate Answer ➜ Display Answer**
+
+This architectural design allows LLMs to more flexibly call various data and tools. Developers only need to focus on developing MCP Servers, and users don't need additional learning costs.
+
+## 4. MCP Principles
+
+When first encountering MCP, I became deeply interested in how LLMs decide which MCP Server to call and when to call it.
+
+The official website has provided an [explanation](https://modelcontextprotocol.io/quickstart/server#what%E2%80%99s-happening-under-the-hood):
+
+1. AI client sends question to LLM
+2. LLM analyzes available tools and decides which one(s) to use
+3. AI client executes selected tools through MCP Server
+4. Execution results return to LLM
+5. LLM generates natural language answer
+6. Display answer
+
+> This means LLM actively selects and calls tools, but how exactly is this implemented?
+
+### 4.1 How Does LLM Determine Which MCP Server to Call?
+
+Let's look at an example using Go and the `mcp-golang` library:
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/metoro-io/mcp-golang"
+    "github.com/metoro-io/mcp-golang/transport/stdio"
+)
+
+type HelloArguments struct {
+    Submitter string `json:"submitter" jsonschema:"required,description=The name of the entity calling this tool (e.g., openai, google, claude)"`
+}
+
+func main() {
+    done := make(chan struct{})
+    server := mcp_golang.NewServer(stdio.NewStdioServerTransport())
+    err := server.RegisterTool("hello", "Say hello to a person", func(arguments HelloArguments) (*mcp_golang.ToolResponse, error) {
+        return mcp_golang.NewToolResponse(mcp_golang.NewTextContent(fmt.Sprintf("Hello, %s!", arguments.Submitter))), nil
+    })
+    if err != nil {
+        panic(err)
+    }
+    err = server.Serve()
+    if err != nil {
+        panic(err)
+    }
+    <-done
+}
+```
+
+In this example, we define a tool named `hello` that takes a `submitter` argument and returns a greeting. The `mcp-golang` library automatically generates the necessary schema based on the struct tags, facilitating seamless integration with LLMs.
+
+> \[!TIP]
+> Summary: LLMs understand which tools are available and their specific functions through prompt engineering, providing descriptions of all tools and few-shot examples to determine which tools to use.
+
+## 5. Using MCP Server: GitHub MCP Example
+
+Using Cursor + GitHub as an example, experience AI directly operating a code repository:
+
+**Step 1: Create GitHub Personal Access Token**
+
+1. Visit [**GitHub Token Settings Page**](https://github.com/settings/tokens)
+2. Check `repo` and `workflow` permissions
+3. Generate a token string starting with `ghp_`
+
+**Step 2: Configure MCP Server**
+
+In Cursor, open the MCP configuration file as follows:
+
+![Add MCP](/static/images/blog/202503/MCP_Quickstart/add_MCP.webp)
+
+Enter the following code, replacing `<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN>` with your GitHub Personal Access Token:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+**Step 3: Verify Connection**
+
+When the status indicator turns green, try natural language commands:
+
+![Add MCP Success](/static/images/blog/202503/MCP_Quickstart/add_MCP_success.png)
+
+![GitHub MCP](/static/images/blog/202503/MCP_Quickstart/github_MCP.png)
+
+## 6. How to Find High-Quality MCP Servers
+
+Currently recommended MCP Server sources:
+
+| Platform                                                               | Features          | Description                                        |
+| ---------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
+| [Official Repository](https://github.com/modelcontextprotocol/servers) | Security Audited  | Officially Certified                               |
+| [Awesome-MCP](https://github.com/punkpeye/awesome-mcp-servers)         | Community Curated | Selected list of excellent MCP servers             |
+| [mcp.so](https://mcp.so/)                                              | MCP Search        | Claimed as "the largest collection of MCP servers" |
+
+## References
+
+- [Model Context Protocol Introduction](https://modelcontextprotocol.io/introduction)
+- [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+- [Model Context Protocol (MCP) Quickstart](https://glama.ai/blog/2024-11-25-model-context-protocol-quickstart)
+- [MCP Ultimate Guide](https://guangzhengli.com/blog/zh/model-context-protocol/#top)

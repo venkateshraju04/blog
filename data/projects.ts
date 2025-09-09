@@ -1,0 +1,51 @@
+import type { Project } from '~/types/data'
+
+export const PROJECTS: Project[] = [
+  {
+    type: 'work',
+    title: 'Sellersetu - Seller Dashboard',
+    description: `A platform which helps you bridge onto India's ONDC E-Commerce revolution.`,
+    imgSrc: '/static/images/projects/seller-dashboard.webp',
+    url: 'https://sellersetu.in',
+    // repo: '',
+    // demo: <AvpDemo />,
+    builtWith: ['NextJS', 'Typescript', 'TailwindCSS', 'Zustand', 'Tanstack'],
+  },
+  {
+    type: 'self',
+    title: 'Solace',
+    description: `A cloud platform designed for deploying and hosting websites. It provides features such as API integration, build automation, and reverse proxy setup to streamline the website deployment process. The platform is primarily developed using Go and TypeScript, with Nextjs and Docker. It aims to simplify the hosting and management of websites with a focus on automation and seamless integration.`,
+    imgSrc: '/static/images/projects/solace.webp',
+    url: 'https://github.com/mohit-nagaraj/Solace',
+    repo: 'mohit-nagaraj/Solace',
+    // demo: <AvpDemo />,
+    builtWith: ['Go', 'TypeScript', 'NextJS', 'Docker', 'AWS', 'NodeJS'],
+  },
+  {
+    type: 'self',
+    title: 'Wechat',
+    description: `A real-time chat application (better features :D) using Socket.IO, Express, and MongoDB with HTTPS support. It manages user connections and messages securely.`,
+    imgSrc: '/static/images/projects/wechat.webp',
+    repo: 'mohit-nagaraj/WeChat',
+    url: 'https://github.com/mohit-nagaraj/WeChat',
+    builtWith: ['NodeJS', 'AWS', 'SocketIO', 'MongoDB', 'Vite'],
+  },
+  {
+    type: 'self',
+    title: 'Exsense',
+    description: ` Engineered a finance management application using Vite for the frontend, Express and Apollo GraphQL for the backend, and MongoDB for secure data storage with Passport authentication.`,
+    imgSrc: '/static/images/projects/exsense.webp',
+    repo: 'mohit-nagaraj/exsense',
+    url: 'https://github.com/mohit-nagaraj/exsense',
+    builtWith: ['Vite', 'Javascript', 'NodeJS', 'GraphQL', 'MongoDB', 'Passport'],
+  },
+  {
+    type: 'self',
+    title: 'VidStreamX',
+    description: `VidStreamX is a scalable video transcoding pipeline inspired by MUX, designed for efficient video processing and distribution. It leverages AWS services like S3 and SQS for seamless video uploads, transcoding, and optimized delivery. The system emphasizes scalability, error handling, and efficient resource utilization.`,
+    imgSrc: '/static/images/projects/vidstreamx.webp',
+    repo: 'mohit-nagaraj/VidStreamX',
+    url: 'https://github.com/mohit-nagaraj/VidStreamX',
+    builtWith: ['Go', 'Docker', 'AWS'],
+  },
+]
