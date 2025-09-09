@@ -1,30 +1,29 @@
 export const AUTHOR_INFO = {
-  name: 'Mohit Nagaraj',
-  description:
-    'A personal space on the cloud where I document my programming journey, sharing lessons, insights, and resources for fellow developers.',
-  email: 'me@mohitnagaraj.in',
-  identity: 'Learner | Builder',
+  name: 'Venkatesh Raju',
+  description: 'Software Developer | Tech Enthusiast | Lifelong Learner',
+  email: 'nrvenkateshraju@gmail.com',
+  identity: 'Tech Enthusiast',
   address: {
     city: 'Bangalore, India',
     timeZone: 5.5,
   },
   work: {
     company: 'Student',
-    occupation: 'Software Engineer',
+    occupation: 'CSE Undergrad',
     location: 'Bangalore, India',
-    website: 'https://mohitnagaraj.in',
+    website: 'https://venkateshraju.me',
   },
   social: {
-    github: 'https://github.com/mohit-nagaraj',
-    x: 'https://x.com/mohit_nagaraj',
+    github: 'https://github.com/venkateshraju04',
+    x: 'https://x.com/',
     facebook: '/',
     youtube: '/',
-    linkedin: 'https://www.linkedin.com/in/mohit-nagaraj',
+    linkedin: 'https://www.linkedin.com/in/venkateshraju04',
     threads: '/',
     instagram: '/',
     juejin: '/',
   },
   support: {
-    kofi: 'https://ko-fi.com/mohitnagaraj',
+    kofi: '/',
   },
 }

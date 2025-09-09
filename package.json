@@ -1,11 +1,11 @@
 {
-  "name": "mohit-nagaraj",
+  "name": "venkatesh-raju",
   "version": "2.0.0",
   "private": true,
   "scripts": {
     "start": "next dev",
     "generate": "node generate-sitemap.js",
-    "dev": "PORT=3434 cross-env INIT_CWD=$PWD next dev",
+    "dev": "cross-env PORT=3434 INIT_CWD=$PWD next dev",
     "build": "cross-env INIT_CWD=$PWD prisma generate && next build && npm run generate && npm run postbuild",
     "postbuild": "cross-env NODE_OPTIONS='--experimental-json-modules' tsx ./scripts/post-build.ts",
     "serve": "next start",

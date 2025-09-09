@@ -1,13 +1,13 @@
 export const SITE_METADATA = {
-  title: `Mohit's blog - My coding journey`,
-  author: 'Mohit Nagaraj',
-  headerTitle: `Mohit's blog`,
+  title: `Venkatesh's blog - My development journey`,
+  author: 'Venkatesh Raju',
+  headerTitle: `Venkatesh's blog`,
   description:
-    'A personal space on the cloud where I document my programming journey, sharing lessons, insights, and resources for fellow developers.',
+    'My development journey - sharing insights, lessons, and resources for fellow developers.',
   language: 'en-us',
   theme: 'dark', // system, dark or light
-  siteUrl: 'https://blog.mohitnagaraj.in',
-  siteRepo: 'https://github.com/mohit-nagaraj/blog',
+  siteUrl: 'https://blog.venkateshraju.me',
+  siteRepo: 'https://github.com/venkateshraju04/blog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/profile.webp`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/page.jpg`,
 
