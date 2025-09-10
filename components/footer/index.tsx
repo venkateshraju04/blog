@@ -21,7 +21,6 @@ export function Footer() {
           <div className="italic text-gray-500 dark:text-gray-400">{SITE_METADATA.description}</div>
           <div className="pt-4">
             <div className="flex gap-8 md:gap-20">
-              <Signature className="h-20 w-32 md:w-40" />
               <AddressAndTime />
             </div>
           </div>

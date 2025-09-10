@@ -92,19 +92,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
       suppressHydrationWarning
     >
-      <link rel="apple-touch-icon" sizes="76x76" href={`${basePath}/static/favicons/favicon.ico`} />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href={`${basePath}/static/favicons/favicon.png`}
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href={`${basePath}/static/favicons/favicon.png`}
-      />
+      <link rel="apple-touch-icon" sizes="76x76" href={`${basePath}/static/images/logo.jpg`} />
+      <link rel="icon" type="image/png" sizes="32x32" href={`${basePath}/static/images/logo.jpg`} />
+      <link rel="icon" type="image/png" sizes="16x16" href={`${basePath}/static/images/logo.jpg`} />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
       <link
         rel="mask-icon"

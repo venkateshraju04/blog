@@ -8,7 +8,7 @@ export const SITE_METADATA = {
   theme: 'dark', // system, dark or light
   siteUrl: 'https://blog.venkateshraju.me',
   siteRepo: 'https://github.com/venkateshraju04/blog',
-  siteLogo: `${process.env.BASE_PATH || ''}/static/images/profile.jpg`,
+  siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.jpg`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/page.jpg`,
 
   locale: 'en-US',
