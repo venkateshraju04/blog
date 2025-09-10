@@ -6,7 +6,7 @@ import { SITE_METADATA } from '~/data/site-metadata'
 export function Logo({ className }: { className?: string }) {
   return (
     <Link
-      href="https://www.mohitnagaraj.in/"
+      href="https://venkateshraju.me"
       aria-label={SITE_METADATA.headerTitle}
       className={clsx([
         'rounded-xl p-0.5',
@@ -16,7 +16,7 @@ export function Logo({ className }: { className?: string }) {
       ])}
     >
       <Image
-        src="/static/images/logo.webp"
+        src="/static/images/logo.jpg"
         alt={SITE_METADATA.headerTitle}
         width={100}
         height={100}
