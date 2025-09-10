@@ -16,7 +16,7 @@ export const SITE_METADATA = {
   analytics: {
     umamiAnalytics: {
       websiteId: process.env.NEXT_UMAMI_ID,
-      shareUrl: 'https://cloud.umami.is/share/4gOlTcozgJgk6vpG/blog.mohitnagaraj.in',
+      shareUrl: '',
     },
   },
   comments: {
