@@ -16,7 +16,7 @@ export const PROJECTS: Project[] = [
     title: 'Chat Sync',
     description: `A real-time chat application that allows users to communicate with each other using WebSockets`,
     imgSrc: '/static/images/projects/chatsync.png',
-    url: 'chat-sync.venkateshraju.me',
+    url: 'https://chat-sync.venkateshraju.me',
     repo: 'venkateshraju04/chat-sync',
     // demo: <AvpDemo />,
     builtWith: ['NodeJS', 'Express.js', 'React', 'Cloudinary', 'SocketIO', 'MongoDB'],
