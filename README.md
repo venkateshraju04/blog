@@ -1,3 +1,3 @@
-Fork of https://github.com/mk965/mengke.me
+Inspired from  https://github.com/mk965/mengke.me
 
 
