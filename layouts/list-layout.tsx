@@ -94,7 +94,7 @@ export function ListLayout({
     <Container className="pt-4 lg:pt-12">
       <PageHeader
         title={title}
-        description="I like to write about stuff I'm into. You'll find a mix of dev articles, new tech I find interesting, and some personal stuff too."
+        description="A collection of my thoughts, tutorials, and ideas."
         className="border-b border-gray-200 dark:border-gray-700"
       >
         <SearchArticles label="Search articles" onChange={(e) => setSearchValue(e.target.value)} />
