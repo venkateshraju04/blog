@@ -7,51 +7,21 @@ const __dirname = path.dirname(__filename)
 
 const allBlogs = [
   {
-    path: 'blog/202503/MCP_Quick_Start',
-    lastmod: '2025-03-29',
-    date: '2025-03-29',
+    path: 'blog/202509/arctic_wolf',
+    lastmod: '2025-09-18',
+    date: '2025-09-18',
     draft: false,
   },
   {
-    path: 'blog/202505/Electron_Shadcn_Guide',
-    lastmod: '2025-05-20',
-    date: '2025-05-20',
+    path: 'blog/202509/porsche',
+    lastmod: '2025-09-11',
+    date: '2025-09-11',
     draft: false,
   },
   {
-    path: 'blog/202506/Monad_Hackthon_Expirience',
-    lastmod: '2025-06-01',
-    date: '2025-06-01',
-    draft: false,
-  },
-  {
-    path: 'blog/202506/Weird_Data_Structures',
-    lastmod: '2025-06-10',
-    date: '2025-06-05',
-    draft: false,
-  },
-  {
-    path: 'blog/202506/How_To_Prompt',
-    lastmod: '2025-06-15',
-    date: '2025-06-15',
-    draft: false,
-  },
-  {
-    path: 'blog/202506/Product_Management_Guide',
-    lastmod: '2025-06-30',
-    date: '2025-06-30',
-    draft: false,
-  },
-  {
-    path: 'blog/202507/Custom_Kubernetes_Operator',
-    lastmod: '2025-07-14',
-    date: '2025-07-14',
-    draft: false,
-  },
-  {
-    path: 'blog/202508/College_Life_And_Friends',
-    lastmod: '2025-08-03',
-    date: '2025-08-03',
+    path: 'blog/202509/custom_roms',
+    lastmod: '2025-09-10',
+    date: '2025-09-10',
     draft: false,
   },
 ]
