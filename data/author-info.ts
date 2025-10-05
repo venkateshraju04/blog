@@ -18,7 +18,7 @@ export const AUTHOR_INFO = {
     x: 'https://x.com/',
     facebook: '/',
     youtube: '/',
-    linkedin: 'https://www.linkedin.com/in/venkateshraju04',
+    linkedin: 'https://www.linkedin.com/in/nrvr',
     threads: '/',
     instagram: '/',
     juejin: '/',
