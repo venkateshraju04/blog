@@ -1,7 +1,7 @@
 export const AUTHOR_INFO = {
   name: 'Venkatesh Raju',
   description: 'Software Developer | Tech Enthusiast | Lifelong Learner',
-  email: 'nrvenkateshraju@gmail.com',
+  email: 'me@venkateshraju.me',
   identity: 'Tech Enthusiast',
   address: {
     city: 'Bangalore, India',
