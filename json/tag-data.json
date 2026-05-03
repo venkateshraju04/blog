@@ -1,5 +1,10 @@
 {
   "911": 1,
+  "hosting": 1,
+  "developers": 1,
+  "aws": 1,
+  "vercel": 1,
+  "github": 1,
   "interview": 1,
   "placements": 1,
   "android": 1,
@@ -7,14 +12,12 @@
   "tech-trends": 1,
   "cars": 1,
   "porsche": 1,
-  "hosting": 1,
-  "developers": 1,
-  "aws": 1,
-  "vercel": 1,
-  "github": 1,
-  "security": 1,
-  "web": 1,
+  "security": 2,
+  "web": 2,
   "csrf": 1,
   "backend": 1,
-  "authentication": 1
+  "authentication": 1,
+  "html": 1,
+  "phishing": 1,
+  "xss": 1
 }
