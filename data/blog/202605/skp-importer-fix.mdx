@@ -1,0 +1,200 @@
+---
+title: 'Fixing the SketchUp Importer Crash on Blender 5.x (macOS)'
+date: '2026-05-21'
+tags: ['blender', 'sketchup', 'macos', 'python', 'debugging', 'open-source']
+draft: false
+summary: 'How I tracked down and fixed a SIGSEGV crash that made the pyslapi SketchUp importer unusable on Blender 5.0.1 for macOS Apple Silicon.'
+images: ['/static/images/blog/202605/skp-importer-fix.png']
+authors:
+  - default
+---
+
+## Introduction
+
+If you've ever tried importing a `.skp` file into Blender using the [pyslapi](https://github.com/martijnberger/pyslapi) addon, you probably know it's one of the only open-source options out there.
+
+But if you tried it on **Blender 5.0.1** on a Mac with Apple Silicon…
+
+It just crashed. Instantly. No error dialog, no traceback — just gone.
+
+I decided to dig in and fix it.
+
+---
+
+## The Problem
+
+When you install the addon and restart Blender 5.0.1 on macOS, the app crashes immediately with a **SIGSEGV (segmentation fault)**.
+
+The crash report pointed to:
+
+```
+EXC_BAD_ACCESS (SIGSEGV)
+```
+
+This happened during startup — before you even try to import anything. Blender was crashing just by **loading the addon's compiled extension** (`sketchup.so`).
+
+---
+
+## What Caused It
+
+The root cause turned out to be a **Python ABI mismatch**.
+
+Here's the breakdown:
+
+- Blender 5.0.1 bundles **Python 3.11**
+- The old `sketchup.so` binary was compiled against **older Python headers**
+- CPython 3.11 significantly redesigned its internal structs (especially `PyCodeObject`)
+- The old binary had **wrong struct offsets baked in**
+
+So when Python tried to validate the module on import, it was reading garbage memory — and crashed.
+
+On top of that, the extension was built with **Cython 0.29.x**, which generates C code with known incompatibilities against CPython 3.11 internals.
+
+---
+
+## How I Diagnosed It
+
+Here's the debugging process I followed:
+
+### 1. Checked the binary
+
+```bash
+file sketchup.so
+# Mach-O 64-bit bundle arm64 ✓
+```
+
+The architecture was correct — this wasn't an Intel vs ARM issue.
+
+### 2. Checked linked libraries
+
+```bash
+otool -L sketchup.so
+```
+
+Framework paths looked fine. `@loader_path` was set correctly for `SketchUpAPI.framework`.
+
+### 3. Checked the ABI tag
+
+The `.so` filename didn't include the standard `cpython-311-darwin` ABI tag. This was the first red flag — it meant the binary wasn't built specifically for Python 3.11.
+
+### 4. Checked Blender's Python version
+
+```bash
+/Applications/Blender.app/Contents/Resources/5.0/python/bin/python3.11 -c \
+  "import sys; print(sys.version)"
+# Python 3.11.13
+```
+
+Blender ships Python 3.11, but the compiled extension wasn't built against 3.11 headers.
+
+### 5. Inspected Cython artifacts
+
+```bash
+strings sketchup.so | grep "Cython"
+```
+
+Found references to old Cython runtime patterns — confirming it was built with Cython 0.29.x, which has known issues with CPython 3.11.
+
+---
+
+## The Fix
+
+The fix involved three things:
+
+### 1. Recompiled with correct Python 3.11 headers
+
+Blender's bundled Python doesn't ship development headers, so I used Homebrew's `python@3.11` instead:
+
+```bash
+export PYTHON=$(brew --prefix python@3.11)/bin/python3.11
+$PYTHON setup.py build_ext --inplace
+```
+
+This ensures the resulting `.so` has the correct struct offsets for CPython 3.11.
+
+### 2. Upgraded Cython to 3.x
+
+```bash
+$PYTHON -m pip install "Cython>=3.0.0"
+```
+
+Cython 3.x generates C code that's fully compatible with CPython 3.11's redesigned internals.
+
+### 3. Improved the build script
+
+I rewrote `build_release_macos.sh` to:
+
+- **Auto-detect** Blender's bundled Python version
+- **Verify ABI compatibility** before building
+- **Fall back** to Homebrew `python@3.11` when Blender's Python lacks dev headers
+- **Run post-build verification** to catch issues early
+- **Fix framework load paths** with `install_name_tool`
+
+I also added a safety check in `setup.py` that warns you if you accidentally build with the wrong Python version.
+
+---
+
+## The Result
+
+After recompiling:
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender --background \
+  --python-expr "import sketchup; print(sketchup.get_API_version())"
+```
+
+No crash. The module loads cleanly, and SketchUp files import as expected.
+
+---
+
+## The Python Fixes (v0.25.1)
+
+Before the ABI crash even became visible, the addon had Python-level bugs that crashed imports.
+
+### 1. KeyError on Nested/Duplicate Components
+
+The importer only tracked **top-level** component definitions, so nested components and auto-renamed duplicates (like `ComponentName#1`) caused a `KeyError` on lookup. I added a `_resolve_component` method that lazily discovers and registers unknown definitions at import time, replacing three direct dictionary lookups that would crash on any model with nested hierarchies.
+
+I also fixed a broken `except` path in the `proxy_dict` class that raised a second `KeyError` instead of falling through.
+
+### 2. Duplicate Processing Bug
+
+A stray duplicate call to `write_duplicateable_groups()` caused every component to be processed twice — wasting time and potentially creating duplicate objects. Removed it.
+
+### 3. Modernizing `setup.py` for Apple Silicon
+
+Migrated from `distutils` (removed in Python 3.12) to `setuptools`, added `rpath` for framework resolution at runtime, and set `-std=c++14` so the extension compiles natively on Apple Silicon without manual `install_name_tool` hacks.
+
+---
+
+## Try It Out
+
+If you're a Blender user on macOS who's been frustrated by the SketchUp importer crashing, give the latest release a try:
+
+👉 **[Download the latest release](https://github.com/venkateshraju04/skp-importer/releases/)**
+
+### Quick install:
+
+1. Download `sketchup_importer_0.25.2_macos_arm64.zip`
+2. In Blender: **Edit > Preferences > Add-ons > Install** → select the zip
+3. Enable **Import-Export: Sketchup importer**
+4. Import via **File > Import > Import Sketchup Scene (.skp)**
+
+### Compatibility:
+
+|                    |                       |
+| ------------------ | --------------------- |
+| **Blender**        | 5.x (tested on 5.0.1) |
+| **macOS**          | Apple Silicon (arm64) |
+| **Python**         | 3.11                  |
+| **SketchUp files** | Up to 2025.1          |
+
+---
+
+## Final Thoughts
+
+This was a classic case of a binary built against the wrong headers silently producing a working file — until the runtime ABI changed underneath it.
+
+The lesson: **always match your build environment to the target runtime.** Especially with CPython, where internal struct layouts can change between minor versions.
+
+If you run into issues or have feedback, feel free to [open an issue](https://github.com/venkateshraju04/skp-importer/issues) or reach out. Happy blending! 🎨
