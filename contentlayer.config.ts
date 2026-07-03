@@ -151,6 +151,23 @@ export const Blog = defineDocumentType(() => ({
         description: doc.summary,
         image: doc.images ? doc.images[0] : SITE_METADATA.socialBanner,
         url: `${SITE_METADATA.siteUrl}/${doc._raw.flattenedPath}`,
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `${SITE_METADATA.siteUrl}/${doc._raw.flattenedPath}`,
+        },
+        author: {
+          '@type': 'Person',
+          name: SITE_METADATA.author,
+          url: 'https://venkateshraju.in',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: SITE_METADATA.author,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${SITE_METADATA.siteUrl}${SITE_METADATA.siteLogo}`,
+          },
+        },
       }),
     },
   },

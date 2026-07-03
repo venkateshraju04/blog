@@ -4,6 +4,19 @@ export const SITE_METADATA = {
   headerTitle: `Venkatesh's blog`,
   description:
     'My development journey - sharing insights, lessons, and resources for fellow developers.',
+  keywords: [
+    'Venkatesh Raju',
+    'developer blog',
+    'full-stack development',
+    'AI engineering',
+    'machine learning',
+    'web development',
+    'React',
+    'Node.js',
+    'Python',
+    'MERN stack',
+    'automation',
+  ],
   language: 'en-us',
   theme: 'light', // system, dark or light
   siteUrl: 'https://blog.venkateshraju.in',
